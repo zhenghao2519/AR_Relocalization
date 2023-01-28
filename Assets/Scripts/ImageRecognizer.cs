@@ -32,9 +32,15 @@ public class ImageRecognizer : MonoBehaviour
 
 
         //trackImageManager = gameObject.GetComponent<ARTrackedImageManager>();
+<<<<<<< HEAD:Assets/Scripts/ImageRecognizer.cs
         trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager1.referenceLibrary = runtimeImageLibrary1;
+=======
+        trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
+
+        trackImageManager.referenceLibrary = runtimeImageLibrary;
+>>>>>>> 047a700499ae999d34abc2c1ce39d246a7b5b9f9:Assets/Scripts/CaptureImageRunTimeManager.cs
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
         trackImageManager1.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
         trackImageManager1.trackedImagePrefab = presentObject;
@@ -44,14 +50,16 @@ public class ImageRecognizer : MonoBehaviour
         trackImageManager1.trackedImagesChanged += OnChanged;
 
         String imgPath = Application.persistentDataPath + "/temp/";
-        if (!Directory.Exists(imgPath))
-            Directory.CreateDirectory(imgPath);
-        var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
-        foreach (string file in imgFiles)
+        if (Directory.Exists(imgPath))
         {
-            //Debug.Log(file);
-            StartCoroutine(LoadImage(file));
+            var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
+            foreach (string file in imgFiles)
+            {
+                //Debug.Log(file);
+                StartCoroutine(LoadImage(file));
+            }
         }
+            
 
         //capturing images take possibly more than few frames, using startcorotine to handle this job
         //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
