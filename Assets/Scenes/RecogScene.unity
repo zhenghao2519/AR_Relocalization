@@ -699,12 +699,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1617371231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a3826e24709b0d4eb069382a65974b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d728312384ab924a9ce8bd79d7962c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   presentObject: {fileID: 2962411716158121133, guid: 6c9ba140fc51c9c42acdf85074248827, type: 3}
   runtimeImageLibrary1: {fileID: 11400000, guid: 100533d7b6fe24d4cbfb78968cb6a58e, type: 2}
-  MaxNumberOfMovingImages: 3
+  MaxNumberOfMovingImages: 0
 --- !u!1 &1750211629
 GameObject:
   m_ObjectHideFlags: 0
