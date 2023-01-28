@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using UnityEngine.XR.ARSubsystems;
 using System.Drawing;
 //using Application = UnityEngine.Application;
 
-public class RecognizeImageRunTimeManager : MonoBehaviour
+public class ImageRecognizer : MonoBehaviour
 {
     //[SerializeField]
     //private Button recognizeImageButton;
@@ -23,17 +23,17 @@ public class RecognizeImageRunTimeManager : MonoBehaviour
     [SerializeField]
     private int MaxNumberOfMovingImages;
 
-    
+
     private ARTrackedImageManager trackImageManager1;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
 
         //trackImageManager = gameObject.GetComponent<ARTrackedImageManager>();
-        trackImageManager1 =  gameObject.AddComponent<ARTrackedImageManager>();
-        
+        trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
+
         trackImageManager1.referenceLibrary = runtimeImageLibrary1;
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
         trackImageManager1.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
@@ -55,7 +55,7 @@ public class RecognizeImageRunTimeManager : MonoBehaviour
 
         //capturing images take possibly more than few frames, using startcorotine to handle this job
         //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
-        
+
     }
 
     public IEnumerator LoadImage(string imgPath)
@@ -72,15 +72,15 @@ public class RecognizeImageRunTimeManager : MonoBehaviour
         t2d.LoadImage(imgBytes);
         string newName = Guid.NewGuid().ToString();
         StartCoroutine(AddImageJob(t2d, newName));
-        
+
     }
-    
+
     void OnDisable()
     {
         trackImageManager1.trackedImagesChanged -= OnChanged;
     }
 
-    
+
     public IEnumerator AddImageJob(Texture2D texture2D, string newName)
     {
         yield return null;
@@ -88,8 +88,8 @@ public class RecognizeImageRunTimeManager : MonoBehaviour
         //imageGuid refers to XRReferenceImage, textureGuid refers to texture in the AssetsDatabase 
         //var imageGuid = new SerializableGuid(0, 0);
         //var textureGuid = new SerializableGuid(0, 0);
-        
-        
+
+
         try
         {
             MutableRuntimeReferenceImageLibrary mutableRuntimeReferenceImageLibrary = trackImageManager1.referenceLibrary as MutableRuntimeReferenceImageLibrary;
@@ -100,11 +100,11 @@ public class RecognizeImageRunTimeManager : MonoBehaviour
             //{
             //    mutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(texture2D, Guid.NewGuid().ToString(), 0.1f);
             //}
-            
+
             var jobHandle = mutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(texture2D, newName, 0.1f);
-            
+
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             if (texture2D == null)
             {
