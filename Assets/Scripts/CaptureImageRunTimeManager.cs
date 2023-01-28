@@ -29,11 +29,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
 
         //trackImageManager = gameObject.GetComponent<ARTrackedImageManager>();
-        trackImageManager =  gameObject.AddComponent<ARTrackedImageManager>();
-        
+        trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
+
         trackImageManager.referenceLibrary = runtimeImageLibrary;
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
         trackImageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
@@ -44,14 +44,16 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         trackImageManager.trackedImagesChanged += OnChanged;
 
         String imgPath = Application.persistentDataPath + "/temp/";
-        if (!Directory.Exists(imgPath))
-            Directory.CreateDirectory(imgPath);
-        var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
-        foreach (string file in imgFiles)
+        if (Directory.Exists(imgPath))
         {
-            //Debug.Log(file);
-            StartCoroutine(LoadImage(file));
+            var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
+            foreach (string file in imgFiles)
+            {
+                //Debug.Log(file);
+                StartCoroutine(LoadImage(file));
+            }
         }
+            
 
         //capturing images take possibly more than few frames, using startcorotine to handle this job
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
