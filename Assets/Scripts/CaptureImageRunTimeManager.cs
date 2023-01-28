@@ -44,6 +44,8 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         trackImageManager.trackedImagesChanged += OnChanged;
 
         String imgPath = Application.persistentDataPath + "/temp/";
+        if (!Directory.Exists(imgPath))
+            Directory.CreateDirectory(imgPath);
         var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
         foreach (string file in imgFiles)
         {
