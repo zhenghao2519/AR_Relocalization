@@ -32,15 +32,9 @@ public class ImageRecognizer : MonoBehaviour
 
 
         //trackImageManager = gameObject.GetComponent<ARTrackedImageManager>();
-<<<<<<< HEAD:Assets/Scripts/ImageRecognizer.cs
         trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager1.referenceLibrary = runtimeImageLibrary1;
-=======
-        trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
-
-        trackImageManager.referenceLibrary = runtimeImageLibrary;
->>>>>>> 047a700499ae999d34abc2c1ce39d246a7b5b9f9:Assets/Scripts/CaptureImageRunTimeManager.cs
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
         trackImageManager1.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
         trackImageManager1.trackedImagePrefab = presentObject;
