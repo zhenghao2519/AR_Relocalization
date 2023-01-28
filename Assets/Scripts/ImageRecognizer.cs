@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,22 +9,22 @@ using UnityEngine.XR.ARSubsystems;
 using System.Drawing;
 //using Application = UnityEngine.Application;
 
-public class CaptureImageRunTimeManager : MonoBehaviour
+public class ImageRecognizer : MonoBehaviour
 {
-    [SerializeField]
-    private Button captureImageButton;
+    //[SerializeField]
+    //private Button recognizeImageButton;
 
     [SerializeField]
     private GameObject presentObject;
 
     [SerializeField]
-    private XRReferenceImageLibrary runtimeImageLibrary;
+    private XRReferenceImageLibrary runtimeImageLibrary1;
 
     [SerializeField]
     private int MaxNumberOfMovingImages;
 
-    
-    private ARTrackedImageManager trackImageManager;
+
+    private ARTrackedImageManager trackImageManager1;
 
     // Start is called before the first frame update
     void Start()
@@ -32,16 +32,22 @@ public class CaptureImageRunTimeManager : MonoBehaviour
 
 
         //trackImageManager = gameObject.GetComponent<ARTrackedImageManager>();
+<<<<<<< HEAD:Assets/Scripts/ImageRecognizer.cs
+        trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
+
+        trackImageManager1.referenceLibrary = runtimeImageLibrary1;
+=======
         trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager.referenceLibrary = runtimeImageLibrary;
+>>>>>>> 047a700499ae999d34abc2c1ce39d246a7b5b9f9:Assets/Scripts/CaptureImageRunTimeManager.cs
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
-        trackImageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
-        trackImageManager.trackedImagePrefab = presentObject;
+        trackImageManager1.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
+        trackImageManager1.trackedImagePrefab = presentObject;
 
 
-        trackImageManager.enabled = true;
-        trackImageManager.trackedImagesChanged += OnChanged;
+        trackImageManager1.enabled = true;
+        trackImageManager1.trackedImagesChanged += OnChanged;
 
         String imgPath = Application.persistentDataPath + "/temp/";
         if (Directory.Exists(imgPath))
@@ -56,11 +62,9 @@ public class CaptureImageRunTimeManager : MonoBehaviour
             
 
         //capturing images take possibly more than few frames, using startcorotine to handle this job
-        captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
-        
-    }
+        //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
 
-   
+    }
 
     public IEnumerator LoadImage(string imgPath)
     {
@@ -76,25 +80,14 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         t2d.LoadImage(imgBytes);
         string newName = Guid.NewGuid().ToString();
         StartCoroutine(AddImageJob(t2d, newName));
-        
+
     }
-    
+
     void OnDisable()
     {
-        trackImageManager.trackedImagesChanged -= OnChanged;
+        trackImageManager1.trackedImagesChanged -= OnChanged;
     }
 
-    private IEnumerator CaptureImage()
-    {
-        yield return new WaitForEndOfFrame();
-
-        var texture = ScreenCapture.CaptureScreenshotAsTexture();
-
-        string newName = Guid.NewGuid().ToString();
-        //XRReferenceImage newImage = new XRReferenceImage(imageGuid, textureGuid, new Vector2(0.1f, 0.1f), newName, texture2D);
-        StartCoroutine(SaveImage(texture, newName));
-        StartCoroutine(AddImageJob(texture, newName));
-    }
 
     public IEnumerator AddImageJob(Texture2D texture2D, string newName)
     {
@@ -103,11 +96,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         //imageGuid refers to XRReferenceImage, textureGuid refers to texture in the AssetsDatabase 
         //var imageGuid = new SerializableGuid(0, 0);
         //var textureGuid = new SerializableGuid(0, 0);
-        
-        
+
+
         try
         {
-            MutableRuntimeReferenceImageLibrary mutableRuntimeReferenceImageLibrary = trackImageManager.referenceLibrary as MutableRuntimeReferenceImageLibrary;
+            MutableRuntimeReferenceImageLibrary mutableRuntimeReferenceImageLibrary = trackImageManager1.referenceLibrary as MutableRuntimeReferenceImageLibrary;
 
             //String path = Application.persistentDataPath + "/temp";
             //var files = Directory.GetFiles(path);
@@ -115,11 +108,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
             //{
             //    mutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(texture2D, Guid.NewGuid().ToString(), 0.1f);
             //}
-            
+
             var jobHandle = mutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(texture2D, newName, 0.1f);
-            
+
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             if (texture2D == null)
             {
@@ -129,20 +122,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         }
 
     }
-    public IEnumerator SaveImage(Texture2D texture2D, string newName)
-    {
-        String path = Application.persistentDataPath + "/temp";
-        yield return null;
-        byte[] bytes = texture2D.EncodeToJPG();
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
-        FileStream file = File.Open(path + "/" + newName + ".jpg", FileMode.Create);
-        BinaryWriter writer = new BinaryWriter(file);
-        writer.Write(bytes);
-        file.Close();
 
-        Debug.Log(path);
-    }
 
     void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
