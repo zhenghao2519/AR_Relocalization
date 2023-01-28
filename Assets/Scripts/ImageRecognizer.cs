@@ -35,6 +35,10 @@ public class ImageRecognizer : MonoBehaviour
         trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager1.referenceLibrary = runtimeImageLibrary1;
+
+        trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
+
+        trackImageManager1.referenceLibrary = runtimeImageLibrary1;
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
         trackImageManager1.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
         trackImageManager1.trackedImagePrefab = presentObject;
