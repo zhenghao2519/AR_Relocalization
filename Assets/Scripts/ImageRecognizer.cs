@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Drawing;
+//using System.Text.RegularExpressions;
 //using Application = UnityEngine.Application;
 
 public class ImageRecognizer : MonoBehaviour
@@ -23,7 +24,7 @@ public class ImageRecognizer : MonoBehaviour
     [SerializeField]
     private int MaxNumberOfMovingImages;
 
-
+   
     private ARTrackedImageManager trackImageManager1;
 
     // Start is called before the first frame update
@@ -76,8 +77,8 @@ public class ImageRecognizer : MonoBehaviour
         //convert to Texture2D
         Texture2D t2d = new Texture2D(4, 4);
         t2d.LoadImage(imgBytes);
-        string newName = Guid.NewGuid().ToString();
-        StartCoroutine(AddImageJob(t2d, newName));
+     
+        StartCoroutine(AddImageJob(t2d, imgPath));
 
     }
 
@@ -126,6 +127,7 @@ public class ImageRecognizer : MonoBehaviour
     {
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
+            
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;
             //trackedImage.transform.Rotate(Vector3.up, 180);
