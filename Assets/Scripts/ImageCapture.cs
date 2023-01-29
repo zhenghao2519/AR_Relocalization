@@ -18,14 +18,24 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     private Button captureImageButton;
 
     [SerializeField]
+    private Button goToStartMenuButton;
+
+    [SerializeField]
     private InputField inputField;
+
+    private int imageCounter = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
+        
+    }
 
+    public void ButtonClick()
+    {
+        imageCounter++;
     }
   
 
@@ -38,7 +48,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         string newName = "["+inputField.text+"]"+Guid.NewGuid().ToString();
         //XRReferenceImage newImage = new XRReferenceImage(imageGuid, textureGuid, new Vector2(0.1f, 0.1f), newName, texture2D);
         StartCoroutine(SaveImage(texture, newName));
-
+        imageCounter++;
 
     }
 
@@ -54,6 +64,15 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         BinaryWriter writer = new BinaryWriter(file);
         writer.Write(bytes);
         file.Close();
+    }
+
+     void Update()
+    {
+        Debug.Log(imageCounter);
+        if (imageCounter == 3)
+        {
+            goToStartMenuButton.gameObject.SetActive(true);
+        }
     }
 
 }
