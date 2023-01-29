@@ -28,15 +28,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        hintsLog.text = "please enter a name for the location and then take at least 3 pictures for it.";
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
         
     }
 
-    public void ButtonClick()
-    {
-        imageCounter++;
-    }
   
 
     private IEnumerator CaptureImage()
@@ -71,6 +67,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         Debug.Log(imageCounter);
         if (imageCounter == 3)
         {
+            hintsLog.text = "Enough pictures taken!";
             goToStartMenuButton.gameObject.SetActive(true);
         }
     }
