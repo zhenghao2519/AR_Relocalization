@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Drawing;
+using System.Text.RegularExpressions;
 //using System.Text.RegularExpressions;
 //using Application = UnityEngine.Application;
 
@@ -14,6 +15,8 @@ public class ImageRecognizer : MonoBehaviour
 {
     //[SerializeField]
     //private Button recognizeImageButton;
+    [SerializeField]
+    private Text scanResult;
 
     [SerializeField]
     private GameObject presentObject;
@@ -26,6 +29,8 @@ public class ImageRecognizer : MonoBehaviour
 
    
     private ARTrackedImageManager trackImageManager;
+    private string locationName = null;
+    private int imageCounter = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -55,8 +60,8 @@ public class ImageRecognizer : MonoBehaviour
                 StartCoroutine(LoadImage(file));
             }
         }
-            
 
+        scanResult.text = "No picture is detected";
         //capturing images take possibly more than few frames, using startcorotine to handle this job
         //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
 
@@ -124,7 +129,26 @@ public class ImageRecognizer : MonoBehaviour
     {
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
-            
+
+            string detectedLocation = Regex.Match(trackedImage.referenceImage.name , @"\[\S*\]").Value;
+            if(detectedLocation == locationName)
+            {
+                imageCounter ++;
+            }
+            else
+            {
+                locationName= detectedLocation;
+                imageCounter = 1;
+            }
+
+            if(imageCounter >= 3)
+            {
+                scanResult.text = "You are now in "+ locationName;
+            }
+            else
+            {
+                scanResult.text = imageCounter + " pictures of " + locationName+ " is detected";
+            }
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;
             //trackedImage.transform.Rotate(Vector3.up, 180);
@@ -134,7 +158,7 @@ public class ImageRecognizer : MonoBehaviour
         {
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;
-            trackedImage.transform.Rotate(Vector3.up, 180);
+            //trackedImage.transform.Rotate(Vector3.up, 180);
         }
     }
 }
