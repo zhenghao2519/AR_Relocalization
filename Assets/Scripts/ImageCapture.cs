@@ -28,7 +28,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hintsLog.text = "please enter a name for the location and then take at least 3 pictures for it.";
+        hintsLog.text = "Please first enter a location name! ";
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
         
     }
@@ -38,13 +38,15 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     private IEnumerator CaptureImage()
     {
         yield return new WaitForEndOfFrame();
-
+        imageCounter++;
+        // Deactive the input field once the capture button is pressed
+        inputField.gameObject.SetActive(false);
         var texture = ScreenCapture.CaptureScreenshotAsTexture();
 
         string newName = "["+inputField.text+"]"+Guid.NewGuid().ToString();
         //XRReferenceImage newImage = new XRReferenceImage(imageGuid, textureGuid, new Vector2(0.1f, 0.1f), newName, texture2D);
         StartCoroutine(SaveImage(texture, newName));
-        imageCounter++;
+        
 
     }
 
@@ -65,6 +67,10 @@ public class CaptureImageRunTimeManager : MonoBehaviour
      void Update()
     {
         Debug.Log(imageCounter);
+        if (imageCounter == 1)
+        {
+            hintsLog.text = "Take at least 3 pictures.";
+        }
         if (imageCounter == 3)
         {
             hintsLog.text = "Enough pictures taken!";
