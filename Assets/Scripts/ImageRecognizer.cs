@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Drawing;
+//using System.Text.RegularExpressions;
 //using Application = UnityEngine.Application;
 
 public class ImageRecognizer : MonoBehaviour
@@ -18,34 +19,31 @@ public class ImageRecognizer : MonoBehaviour
     private GameObject presentObject;
 
     [SerializeField]
-    private XRReferenceImageLibrary runtimeImageLibrary1;
+    private XRReferenceImageLibrary runtimeImageLibrary;
 
     [SerializeField]
     private int MaxNumberOfMovingImages;
 
-
-    private ARTrackedImageManager trackImageManager1;
+   
+    private ARTrackedImageManager trackImageManager;
 
     // Start is called before the first frame update
     void Start()
     {
 
 
-        //trackImageManager = gameObject.GetComponent<ARTrackedImageManager>();
-        trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
+    
 
-        trackImageManager1.referenceLibrary = runtimeImageLibrary1;
+        trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
 
-        trackImageManager1 = gameObject.AddComponent<ARTrackedImageManager>();
-
-        trackImageManager1.referenceLibrary = runtimeImageLibrary1;
+        trackImageManager.referenceLibrary = runtimeImageLibrary;
         //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
-        trackImageManager1.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
-        trackImageManager1.trackedImagePrefab = presentObject;
+        trackImageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
+        trackImageManager.trackedImagePrefab = presentObject;
 
 
-        trackImageManager1.enabled = true;
-        trackImageManager1.trackedImagesChanged += OnChanged;
+        trackImageManager.enabled = true;
+        trackImageManager.trackedImagesChanged += OnChanged;
 
         String imgPath = Application.persistentDataPath + "/temp/";
         if (Directory.Exists(imgPath))
@@ -76,14 +74,14 @@ public class ImageRecognizer : MonoBehaviour
         //convert to Texture2D
         Texture2D t2d = new Texture2D(4, 4);
         t2d.LoadImage(imgBytes);
-        string newName = Guid.NewGuid().ToString();
-        StartCoroutine(AddImageJob(t2d, newName));
+     
+        StartCoroutine(AddImageJob(t2d, imgPath));
 
     }
 
     void OnDisable()
     {
-        trackImageManager1.trackedImagesChanged -= OnChanged;
+        trackImageManager.trackedImagesChanged -= OnChanged;
     }
 
 
@@ -98,7 +96,7 @@ public class ImageRecognizer : MonoBehaviour
 
         try
         {
-            MutableRuntimeReferenceImageLibrary mutableRuntimeReferenceImageLibrary = trackImageManager1.referenceLibrary as MutableRuntimeReferenceImageLibrary;
+            MutableRuntimeReferenceImageLibrary mutableRuntimeReferenceImageLibrary = trackImageManager.referenceLibrary as MutableRuntimeReferenceImageLibrary;
 
             //String path = Application.persistentDataPath + "/temp";
             //var files = Directory.GetFiles(path);
@@ -126,6 +124,7 @@ public class ImageRecognizer : MonoBehaviour
     {
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
+            
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;
             //trackedImage.transform.Rotate(Vector3.up, 180);
