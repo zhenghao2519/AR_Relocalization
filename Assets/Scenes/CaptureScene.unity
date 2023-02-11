@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -67,9 +67,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -906,6 +903,7 @@ GameObject:
   - component: {fileID: 1617371232}
   - component: {fileID: 1617371236}
   - component: {fileID: 1617371237}
+  - component: {fileID: 1617371238}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -974,6 +972,20 @@ MonoBehaviour:
   captureImageButton: {fileID: 568892914}
   goToStartMenuButton: {fileID: 739824797}
   inputField: {fileID: 1751777941}
+--- !u!114 &1617371238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617371231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1760703bbd54c04488a8d10600262ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PlanePrefab: {fileID: 1953078813312724268, guid: 823ee20cedfa14b4b96891623b71f016, type: 3}
+  m_DetectionMode: -1
 --- !u!1 &1641199316
 GameObject:
   m_ObjectHideFlags: 0
