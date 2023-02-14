@@ -1,5 +1,18 @@
-
-
+---
+## To-dos
+- [ ] Capture Mode
+      - [ ] Store the **Position** and **Rotation** of captured images in capture mode.
+      - [ ] Add placing cude in capture mode
+            - [ ] Plane detection
+            - [ ] Place cude
+            - [ ] Store the Position and Rotation of the cube in json file
+- [ ] Detection Mode
+      - [ ] Get the Position and Rotation of a detected image
+      - [ ] Calculate the offset between the previous and current coordinate systems.
+            - [ ] While detecting the first image
+            - [ ] While detecting the second image and so on
+      - [ ] Calculate and show the cube in current system.
+      
 ---
 
 ## Gitflow
@@ -38,3 +51,4 @@ Every team will present in a **15 minute presentation** what they did in the lab
       1. Android Version
 6. A slide about what did work well in the lab
 7. A summary & Questions slide
+
