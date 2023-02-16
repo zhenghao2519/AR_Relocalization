@@ -67,6 +67,11 @@ public class ImageRecognizer : MonoBehaviour
 
     }
 
+
+    void OnDisable() {
+        trackImageManager.trackedImagesChanged -= OnChanged;
+    }
+     
     public IEnumerator LoadImage(string imgPath)
     {
         yield return null;
@@ -84,10 +89,7 @@ public class ImageRecognizer : MonoBehaviour
 
     }
 
-    void OnDisable()
-    {
-        trackImageManager.trackedImagesChanged -= OnChanged;
-    }
+    
 
 
     public IEnumerator AddImageJob(Texture2D texture2D, string newName)
