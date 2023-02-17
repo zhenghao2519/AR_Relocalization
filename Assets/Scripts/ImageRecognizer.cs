@@ -66,7 +66,8 @@ public class ImageRecognizer : MonoBehaviour
                 StartCoroutine(LoadImage(file));
             }
         }
-        StartCoroutine(LoadCube());
+        //this read the the local json file of the placed cube
+        //StartCoroutine(LoadCube());
 
         scanResult.text = "No picture is detected"+cubePosition+cubeRotation;
         
