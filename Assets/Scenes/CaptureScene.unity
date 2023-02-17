@@ -1023,6 +1023,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dca7db848744564db70ebed39fa6e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball000: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
+  cube100: {fileID: 9154671178031857203, guid: 8ba6bfe9120e7fe4ea1414c229f1f8fa, type: 3}
   hintsLog: {fileID: 782628377}
   captureImageButton: {fileID: 568892914}
   placeCubeButton: {fileID: 739824797}

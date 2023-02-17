@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Text;
 //using System.Text.RegularExpressions;
 //using Application = UnityEngine.Application;
 
@@ -15,6 +14,8 @@ public class ImageRecognizer : MonoBehaviour
 {
     //[SerializeField]
     //private Button recognizeImageButton;
+    public GameObject ball000;
+    public GameObject cube100;
     [SerializeField]
     private Text scanResult;
 
@@ -27,18 +28,22 @@ public class ImageRecognizer : MonoBehaviour
     [SerializeField]
     private int MaxNumberOfMovingImages;
 
-   
+    public GameObject gameObjectToPlace;
+
+
     private ARTrackedImageManager trackImageManager;
     private string locationName = null;
     private int imageCounter = 0;
+    private Vector3 deltaPostion;
+    private Vector3 deltaRotation;
+    private string cubePosition;
+    private string cubeRotation;
+    private GameObject showedObject = null;
 
     // Start is called before the first frame update
     void Start()
     {
-
-
-    
-
+        Instantiate(ball000, Vector3.zero, Quaternion.Euler(Vector3.zero));
         trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager.referenceLibrary = runtimeImageLibrary;
@@ -50,6 +55,7 @@ public class ImageRecognizer : MonoBehaviour
         trackImageManager.enabled = true;
         trackImageManager.trackedImagesChanged += OnChanged;
 
+        //capturing images take possibly more than few frames, using startcorotine to handle this job
         String imgPath = Application.persistentDataPath + "/temp/";
         if (Directory.Exists(imgPath))
         {
@@ -60,9 +66,10 @@ public class ImageRecognizer : MonoBehaviour
                 StartCoroutine(LoadImage(file));
             }
         }
+        StartCoroutine(LoadCube());
 
-        scanResult.text = "No picture is detected";
-        //capturing images take possibly more than few frames, using startcorotine to handle this job
+        scanResult.text = "No picture is detected"+cubePosition+cubeRotation;
+        
         //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
 
     }
@@ -71,7 +78,17 @@ public class ImageRecognizer : MonoBehaviour
     void OnDisable() {
         trackImageManager.trackedImagesChanged -= OnChanged;
     }
-     
+    public IEnumerator LoadCube() {
+        yield return null;
+        scanResult.text = "start read";
+        string cubeLocation = LoadJsontoString();
+        scanResult.text = "getJson"+"|"+cubeLocation;
+        cubePosition = Regex.Match(cubeLocation, @"\{\S*\}").Value;
+        cubePosition = cubePosition.Substring(2, cubePosition.Length - 4);
+        cubeRotation = Regex.Match(cubeLocation, @"\`\S*\`").Value;
+        cubeRotation = cubeRotation.Substring(2, cubeRotation.Length - 4);
+        scanResult.text = cubeLocation+"||"+ cubePosition +"|"+ cubeRotation+ "Cube loaded" ;
+    }
     public IEnumerator LoadImage(string imgPath)
     {
         yield return null;
@@ -126,42 +143,80 @@ public class ImageRecognizer : MonoBehaviour
 
     }
 
+    //transform string into vector3
+    public static Vector3 ParseVector3(string str) {
+        string[] strs = str.Split(',');
+        float x = float.Parse(strs[0]);
+        float y = float.Parse(strs[1]);
+        float z = float.Parse(strs[2]);
+        return new Vector3(x, y, z);
+    }
 
-    void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
+    public string LoadJsontoString() {
+        string path = Application.persistentDataPath + "/temp/cube/cube.json";
+        FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+        int byteLength = (int)fs.Length;
+        byte[] bytes = new byte[byteLength];
+        fs.Read(bytes, 0, byteLength);
+        fs.Close();
+        fs.Dispose();
+        string s = new UTF8Encoding().GetString(bytes);
+        return s;
+    }
+
+    private IEnumerator updateOffset(ARTrackedImage trackedImage,string detectedLocation, string position, string rotation) {
+        yield return new WaitForSeconds(1);
+        //if tracked image is the first one being detected in this location
+        if (detectedLocation != locationName) {
+            locationName = detectedLocation;
+            imageCounter = 1;
+            deltaPostion = trackedImage.transform.position - ParseVector3(position);
+            deltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
+        } else
+          //if tracked image belongs to a detected location
+          {
+            imageCounter++;
+            Vector3 currentDeltaPosition = trackedImage.transform.position - ParseVector3(position);
+            Vector3 currentDeltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
+            deltaPostion = (deltaPostion + currentDeltaPosition) / 2;
+            deltaRotation = (deltaRotation + currentDeltaRotation) / 2;
+        }
+
+        if (imageCounter >= 1) {
+            if (showedObject == null) {
+                //showedObject = Instantiate(gameObjectToPlace, ParseVector3(cubePosition) + deltaPostion, Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation));
+                showedObject = Instantiate(cube100, Vector3.right + deltaPostion, Quaternion.Euler(Vector3.zero + deltaRotation));
+            } else {
+                //showedObject.transform.position = ParseVector3(cubePosition) + deltaPostion;
+                //showedObject.transform.rotation = Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation);
+                showedObject.transform.position = Vector3.right + deltaPostion;
+                showedObject.transform.rotation = Quaternion.Euler(Vector3.zero);
+            }
+            scanResult.text = imageCounter + " pictures of " + locationName + " is detected. Current offset is" + deltaPostion + deltaRotation;
+        }
+    }
+        void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
 
             string detectedLocation = Regex.Match(trackedImage.referenceImage.name , @"\[\S*\]").Value;
-            if(detectedLocation == locationName)
-            {
-                imageCounter ++;
-            }
-            else
-            {
-                locationName= detectedLocation;
-                imageCounter = 1;
-            }
-
-            if(imageCounter >= 3)
-            {
-                scanResult.text = "You are now in "+ locationName;
-            }
-            else
-            {
-                scanResult.text = imageCounter + " pictures of " + locationName+ " is detected";
-            }
+            string position = Regex.Match(trackedImage.referenceImage.name, @"\{\S*\}").Value;
+            //from {(xx,yy,zz)} to xx,yy,zz
+            position = position.Substring(2, position.Length - 4);
+            string rotation = Regex.Match(trackedImage.referenceImage.name, @"\`\S*\`").Value;
+            //from '(xx,yy,zz)' to xx,yy,zz
+            rotation = rotation.Substring(2, rotation.Length - 4);
+            StartCoroutine(updateOffset(trackedImage,detectedLocation,position,rotation));
+            
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;
             //trackedImage.transform.Rotate(Vector3.up, 180);
         }
 
-        foreach (ARTrackedImage trackedImage in eventArgs.updated)
-        {
-            // Display the name of the tracked image in the canvas
-            //currentImageText.text = trackedImage.referenceImage.name;
-            //trackedImage.transform.Rotate(Vector3.up, 180);
-        }
+        //foreach (ARTrackedImage trackedImage in eventArgs.updated)
+        //{
+        //}
     }
 }
 
