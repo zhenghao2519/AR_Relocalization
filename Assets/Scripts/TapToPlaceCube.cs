@@ -61,6 +61,7 @@ public class TapToPlaceCube : MonoBehaviour
         yield return null;
         //string json = JsonUtility.ToJson(spawnedObject.transform);
         string json = "{"+ spawnedObject.transform.position.ToString()+"}"+ "`" + spawnedObject.transform.eulerAngles.ToString() + "`";
+        json = json.Replace(" ", "");
         //File.Create(path + "/cube.txt");
         //File.WriteAllText(path + "/cube.txt", json, System.Text.Encoding.UTF8);
         FileStream fs = new FileStream(path + "/cube.json", FileMode.Create);

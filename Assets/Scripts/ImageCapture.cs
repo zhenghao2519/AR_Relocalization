@@ -12,9 +12,11 @@ using Unity.XR.CoreUtils;
 
 public class CaptureImageRunTimeManager : MonoBehaviour
 {
+    public GameObject ball000;
+    public GameObject cube100;
     [SerializeField]
     private Text hintsLog;
-
+    
     [SerializeField]
     private Button captureImageButton;
 
@@ -32,6 +34,8 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     {
         hintsLog.text = "Please first enter a location name! ";
         xrCamera = GameObject.Find("XR Origin").transform.Find("Camera Offset").Find("Main Camera");
+        Instantiate(ball000,Vector3.zero, Quaternion.Euler(Vector3.zero));
+        Instantiate(cube100, Vector3.right, Quaternion.Euler(Vector3.zero));
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
         
     }
@@ -51,6 +55,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         //Save the jpeg with name in the form of
         //[LocationName]{ImagePosition}`ImageRotation`UniqueIdentifier
         string newName = "["+inputField.text+"]"+"{" + imagePosition.ToString() + "}" + "`" + imageRotation.ToString() + "`" + Guid.NewGuid().ToString();
+        newName = newName.Replace(" ", "");
         //string newName = Guid.NewGuid().ToString();
         //XRReferenceImage newImage = new XRReferenceImage(imageGuid, textureGuid, new Vector2(0.1f, 0.1f), newName, texture2D);
         StartCoroutine(SaveImage(texture, newName));
