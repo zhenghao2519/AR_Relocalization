@@ -1,18 +1,19 @@
----
+
 ## To-dos
-- [ ] Capture Mode
-	- [ ] Store the **Position** and **Rotation** of captured images in capture mode.
+- [x] Capture Mode
+	- [x] Store the **Position** and **Rotation** of captured images in capture mode.
 	- [ ] Add placing cude in capture mode
-		- [ ] Plane detection
-		- [ ] Place cude
-		- [ ] Store the Position and Rotation of the cube in json file
-- [ ] Detection Mode
-	- [ ] Get the Position and Rotation of a detected image
-	- [ ] Calculate the offset between the previous and current coordinate systems.
-		- [ ] While detecting the first image
-		- [ ] While detecting the second image and so on
-	- [ ] Calculate and show the cube in current system.
-      
+		- [x] Plane detection
+		- [x] Place cude
+		- [x] Store the Position and Rotation of the cube in json file
+		- [ ] !!! To be fixed: The position of the cube is extremely large, don't know where lies the problem. So I choose to use a cube in fixed position (1,0,0).
+- [x] Detection Mode
+	- [x] Get the Position and Rotation of a detected image
+	- [x] Calculate the offset between the previous and current coordinate systems.
+		- [x] While detecting the first image
+		- [x] While detecting the second image and so on
+	- [x] Calculate and show the cube in current system.
+    
 ---
 
 ## Gitflow
