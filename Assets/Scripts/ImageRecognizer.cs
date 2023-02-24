@@ -209,8 +209,8 @@ public class ImageRecognizer : MonoBehaviour
             //Vector3 currentDeltaRotation = xrCamera.transform.eulerAngles - ParseVector3(rotation);
 
             //if more image detected, recalculate the offset (deltaPosition, deltaRotation) by choosing the average value
-            deltaPostion = (deltaPostion + currentDeltaPosition) / 2;
-            deltaRotation = (deltaRotation + currentDeltaRotation) / 2;
+            deltaPostion = (deltaPostion + currentDeltaPosition) / imageCounter;
+            deltaRotation = (deltaRotation + currentDeltaRotation) / imageCounter;
             newCubePosition = cubePositionVector + deltaPostion;
             newCubeRotation = cubeRotationVector + deltaRotation;
 
