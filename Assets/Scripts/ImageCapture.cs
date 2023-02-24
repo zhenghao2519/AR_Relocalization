@@ -81,7 +81,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     {
         if (imageCounter == 1)
         {
-            hintsLog.text = "Take at least 3 pictures.";
+            hintsLog.text = "Take at least 2 more pictures.";
+        }
+        if (imageCounter == 2)
+        {
+            hintsLog.text = "Take at least 1 more picture.";
         }
         if (imageCounter == 3)
         {

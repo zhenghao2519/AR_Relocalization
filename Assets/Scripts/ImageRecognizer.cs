@@ -69,26 +69,28 @@ public class ImageRecognizer : MonoBehaviour
         //this read the the local json file of the placed cube
         //StartCoroutine(LoadCube());
 
-        scanResult.text = "No picture is detected"+cubePosition+cubeRotation;
-        
+        scanResult.text = "No picture is detected" + cubePosition + cubeRotation;
+
         //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
 
     }
 
 
-    void OnDisable() {
+    void OnDisable()
+    {
         trackImageManager.trackedImagesChanged -= OnChanged;
     }
-    public IEnumerator LoadCube() {
+    public IEnumerator LoadCube()
+    {
         yield return null;
         scanResult.text = "start read";
         string cubeLocation = LoadJsontoString();
-        scanResult.text = "getJson"+"|"+cubeLocation;
+        scanResult.text = "getJson" + "|" + cubeLocation;
         cubePosition = Regex.Match(cubeLocation, @"\{\S*\}").Value;
         cubePosition = cubePosition.Substring(2, cubePosition.Length - 4);
         cubeRotation = Regex.Match(cubeLocation, @"\`\S*\`").Value;
         cubeRotation = cubeRotation.Substring(2, cubeRotation.Length - 4);
-        scanResult.text = cubeLocation+"||"+ cubePosition +"|"+ cubeRotation+ "Cube loaded" ;
+        scanResult.text = cubeLocation + "||" + cubePosition + "|" + cubeRotation + "Cube loaded";
     }
     public IEnumerator LoadImage(string imgPath)
     {
@@ -102,12 +104,12 @@ public class ImageRecognizer : MonoBehaviour
         //convert to Texture2D
         Texture2D t2d = new Texture2D(4, 4);
         t2d.LoadImage(imgBytes);
-     
+
         StartCoroutine(AddImageJob(t2d, imgPath));
 
     }
 
-    
+
 
 
     public IEnumerator AddImageJob(Texture2D texture2D, string newName)
@@ -145,7 +147,8 @@ public class ImageRecognizer : MonoBehaviour
     }
 
     //transform string into vector3
-    public static Vector3 ParseVector3(string str) {
+    public static Vector3 ParseVector3(string str)
+    {
         string[] strs = str.Split(',');
         float x = float.Parse(strs[0]);
         float y = float.Parse(strs[1]);
@@ -153,7 +156,8 @@ public class ImageRecognizer : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
-    public string LoadJsontoString() {
+    public string LoadJsontoString()
+    {
         string path = Application.persistentDataPath + "/temp/cube/cube.json";
         FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
         int byteLength = (int)fs.Length;
@@ -165,17 +169,20 @@ public class ImageRecognizer : MonoBehaviour
         return s;
     }
 
-    private IEnumerator updateOffset(ARTrackedImage trackedImage,string detectedLocation, string position, string rotation) {
+    private IEnumerator updateOffset(ARTrackedImage trackedImage, string detectedLocation, string position, string rotation)
+    {
         yield return new WaitForSeconds(1);
         //if tracked image is the first one being detected in this location
-        if (detectedLocation != locationName) {
+        if (detectedLocation != locationName)
+        {
             locationName = detectedLocation;
             imageCounter = 1;
             deltaPostion = trackedImage.transform.position - ParseVector3(position);
             deltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
-        } else
-          //if tracked image belongs to a detected location
-          {
+        }
+        else
+        //if tracked image belongs to a detected location
+        {
             imageCounter++;
             Vector3 currentDeltaPosition = trackedImage.transform.position - ParseVector3(position);
             Vector3 currentDeltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
@@ -183,11 +190,15 @@ public class ImageRecognizer : MonoBehaviour
             deltaRotation = (deltaRotation + currentDeltaRotation) / 2;
         }
 
-        if (imageCounter >= 1) {
-            if (showedObject == null) {
+        if (imageCounter >= 1)
+        {
+            if (showedObject == null)
+            {
                 //showedObject = Instantiate(gameObjectToPlace, ParseVector3(cubePosition) + deltaPostion, Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation));
                 showedObject = Instantiate(cube100, Vector3.right + deltaPostion, Quaternion.Euler(Vector3.zero + deltaRotation));
-            } else {
+            }
+            else
+            {
                 //showedObject.transform.position = ParseVector3(cubePosition) + deltaPostion;
                 //showedObject.transform.rotation = Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation);
                 showedObject.transform.position = Vector3.right + deltaPostion;
@@ -196,20 +207,20 @@ public class ImageRecognizer : MonoBehaviour
             scanResult.text = imageCounter + " pictures of " + locationName + " is detected. Current offset is" + deltaPostion + deltaRotation;
         }
     }
-        void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
+    void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
 
-            string detectedLocation = Regex.Match(trackedImage.referenceImage.name , @"\[\S*\]").Value;
+            string detectedLocation = Regex.Match(trackedImage.referenceImage.name, @"\[\S*\]").Value;
             string position = Regex.Match(trackedImage.referenceImage.name, @"\{\S*\}").Value;
             //from {(xx,yy,zz)} to xx,yy,zz
             position = position.Substring(2, position.Length - 4);
             string rotation = Regex.Match(trackedImage.referenceImage.name, @"\`\S*\`").Value;
             //from '(xx,yy,zz)' to xx,yy,zz
             rotation = rotation.Substring(2, rotation.Length - 4);
-            StartCoroutine(updateOffset(trackedImage,detectedLocation,position,rotation));
-            
+            StartCoroutine(updateOffset(trackedImage, detectedLocation, position, rotation));
+
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;
             //trackedImage.transform.Rotate(Vector3.up, 180);

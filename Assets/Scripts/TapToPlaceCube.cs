@@ -35,7 +35,7 @@ public class TapToPlaceCube : MonoBehaviour
             return true;
         }
         touchPosition = default;
-        return false;
+        return false; 
     }
     // Update is called once per frame
     void Update()
