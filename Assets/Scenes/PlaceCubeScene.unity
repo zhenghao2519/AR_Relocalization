@@ -1066,6 +1066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectToPlace: {fileID: 7438809964396442887, guid: 584d408540f360148b582f50a02f62b6, type: 3}
+  scanResult: {fileID: 1135368750}
 --- !u!114 &2010864112
 MonoBehaviour:
   m_ObjectHideFlags: 0

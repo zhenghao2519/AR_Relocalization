@@ -5,12 +5,14 @@ using System.IO;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 [RequireComponent(typeof(ARRaycastManager))]
 public class TapToPlaceCube : MonoBehaviour
 {
+
     public GameObject gameObjectToPlace;
 
     
@@ -21,6 +23,10 @@ public class TapToPlaceCube : MonoBehaviour
 
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
     // Start is called before the first frame update
+
+    [SerializeField]
+    private Text scanResult;
+
     void Start()
     {
         arRaycastManager = GetComponent<ARRaycastManager>();
@@ -49,6 +55,9 @@ public class TapToPlaceCube : MonoBehaviour
 
             if(spawnedObject == null) {
                 spawnedObject = Instantiate(gameObjectToPlace, hitPose.position, hitPose.rotation);
+
+
+                scanResult.text = spawnedObject.transform.position.ToString();
                 StartCoroutine(SaveJson());
                 //} else {
                 //    spawnedObject.transform.position = hitPose.position;
