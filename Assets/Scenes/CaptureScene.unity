@@ -1254,7 +1254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dca7db848744564db70ebed39fa6e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToPlace: {fileID: 7438809964396442887, guid: 584d408540f360148b582f50a02f62b6, type: 3}
+  gameObjectToPlace: {fileID: 2962411716158121133, guid: 5a97cde18c095c345b63f6798de76401, type: 3}
+  ball000: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
   hintsLog: {fileID: 782628377}
   captureImageButton: {fileID: 568892914}
   goToMenuButton: {fileID: 800426557}

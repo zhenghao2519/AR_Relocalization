@@ -7,6 +7,8 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Text.RegularExpressions;
 using System.Text;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 //using System.Text.RegularExpressions;
 //using Application = UnityEngine.Application;
 
@@ -14,7 +16,7 @@ public class ImageRecognizer : MonoBehaviour
 {
     //[SerializeField]
     //private Button recognizeImageButton;
-    //public GameObject ball000;
+    public GameObject ball000;
     public GameObject cube100;
     [SerializeField]
     private Text scanResult;
@@ -49,7 +51,8 @@ public class ImageRecognizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Instantiate(ball000, Vector3.zero, Quaternion.Euler(Vector3.zero));
+        Instantiate(ball000, Vector3.zero, Quaternion.Euler(Vector3.zero));
+
         trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager.referenceLibrary = runtimeImageLibrary;
@@ -209,8 +212,8 @@ public class ImageRecognizer : MonoBehaviour
             //Vector3 currentDeltaRotation = xrCamera.transform.eulerAngles - ParseVector3(rotation);
 
             //if more image detected, recalculate the offset (deltaPosition, deltaRotation) by choosing the average value
-            deltaPostion = (deltaPostion + currentDeltaPosition) / imageCounter;
-            deltaRotation = (deltaRotation + currentDeltaRotation) / imageCounter;
+            deltaPostion = (deltaPostion * (imageCounter - 1) + currentDeltaPosition) / imageCounter;
+            deltaRotation = (deltaRotation * (imageCounter - 1) + currentDeltaRotation) / imageCounter;
             newCubePosition = cubePositionVector + deltaPostion;
             newCubeRotation = cubeRotationVector + deltaRotation;
 
@@ -222,7 +225,8 @@ public class ImageRecognizer : MonoBehaviour
             {
                 //showedObject = Instantiate(gameObjectToPlace, ParseVector3(cubePosition) + deltaPostion, Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation));
                 //showedObject = Instantiate(cube100, Vector3.right + deltaPostion, Quaternion.Euler(Vector3.zero + deltaRotation));
-                showedObject = Instantiate(cube100,newCubePosition,Quaternion.Euler(newCubeRotation));
+
+                showedObject = Instantiate(cube100,newCubePosition,Quaternion.Euler(new Vector3(newCubeRotation.x, 0,0)));
                 
             }
             else
@@ -230,7 +234,7 @@ public class ImageRecognizer : MonoBehaviour
                 //showedObject.transform.position = ParseVector3(cubePosition) + deltaPostion;
                 //showedObject.transform.rotation = Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation);
                 showedObject.transform.position = newCubePosition;
-                showedObject.transform.rotation = Quaternion.Euler(newCubeRotation);
+                showedObject.transform.rotation = Quaternion.Euler(new Vector3(newCubeRotation.x, 0, 0));
             }
             //scanResult.text = imageCounter + " pictures of " + locationName + "detected. Current offset is" + deltaPostion + deltaRotation;
 
@@ -240,6 +244,7 @@ public class ImageRecognizer : MonoBehaviour
     }
     void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
+         
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
             
@@ -250,7 +255,9 @@ public class ImageRecognizer : MonoBehaviour
             string rotation = Regex.Match(trackedImage.referenceImage.name, @"\`\S*\`").Value;
             //from '(xx,yy,zz)' to xx,yy,zz
             rotation = rotation.Substring(2, rotation.Length - 4);
-            StartCoroutine(UpdateOffset(trackedImage,detectedLocation, position, rotation));
+            StartCoroutine(UpdateOffset(trackedImage, detectedLocation, position, rotation));
+            
+            
 
             // Display the name of the tracked image in the canvas
             //currentImageText.text = trackedImage.referenceImage.name;

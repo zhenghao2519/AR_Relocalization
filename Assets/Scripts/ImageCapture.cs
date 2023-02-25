@@ -18,7 +18,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     private string path;
     private Vector3 cubePosition;
     private Vector3 cubeRotation;
-    //public GameObject ball000;
+    public GameObject ball000;
     //public GameObject cube100;
     [SerializeField]
     private Text hintsLog;
@@ -41,7 +41,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     {
         hintsLog.text = "Please first enter a location name! ";
         xrCamera = GameObject.Find("XR Origin").transform.Find("Camera Offset").Find("Main Camera");
-        //Instantiate(ball000,Vector3.zero, Quaternion.Euler(Vector3.zero));
+        Instantiate(ball000,Vector3.zero, Quaternion.Euler(Vector3.zero));
         //Instantiate(cube100, Vector3.right, Quaternion.Euler(Vector3.zero));
         path = Application.persistentDataPath + "/temp/cube";
         if (!Directory.Exists(path))
@@ -93,17 +93,25 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     {
         if (imageCounter == 1)
         {
-            hintsLog.text = "Take at least 2 more pictures.";
+            hintsLog.text = "Take at least 4 more pictures.";
         }
         if (imageCounter == 2)
         {
-            hintsLog.text = "Take at least 1 more picture.";
+            hintsLog.text = "Take at least 3 more picture.";
         }
         if (imageCounter == 3)
         {
+            hintsLog.text = "Take at least 2 more picture.";
+        }
+        if (imageCounter == 4)
+        {
+            hintsLog.text = "Take at least 1 more picture.";
+        }
+        if (imageCounter == 5)
+        {
             hintsLog.text = "Enough pictures taken!";
             //placeCubeButton.gameObject.SetActive(true);
-            spawnedObject = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(cubeRotation));
+            spawnedObject = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x,0, 0)));
             StartCoroutine(SaveJson());
             goToMenuButton.gameObject.SetActive(true);
             
