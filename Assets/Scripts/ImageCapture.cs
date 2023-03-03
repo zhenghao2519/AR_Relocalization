@@ -18,16 +18,16 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     private string path;
     private Vector3 cubePosition;
     private Vector3 cubeRotation;
-    public GameObject ball000;
-    //public GameObject cube100;
+    public GameObject ball_cood_origin;
+
     [SerializeField]
     private Text hintsLog;
-    
+
     [SerializeField]
     private Button captureImageButton;
 
     [SerializeField]
-    //private Button placeCubeButton;
+
     private Button goToMenuButton;
 
     [SerializeField]
@@ -41,16 +41,16 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     {
         hintsLog.text = "Please first enter a location name! ";
         xrCamera = GameObject.Find("XR Origin").transform.Find("Camera Offset").Find("Main Camera");
-        Instantiate(ball000,Vector3.zero, Quaternion.Euler(Vector3.zero));
+        Instantiate(ball_cood_origin, Vector3.zero, Quaternion.Euler(Vector3.zero));
         //Instantiate(cube100, Vector3.right, Quaternion.Euler(Vector3.zero));
         path = Application.persistentDataPath + "/temp/cube";
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
-        
+
     }
 
-  
+
 
     private IEnumerator CaptureImage()
     {
@@ -63,21 +63,20 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         Vector3 imagePosition = xrCamera.position;
         Vector3 imageRotation = xrCamera.eulerAngles;
         cubePosition = (cubePosition + imagePosition) / 2;
-        cubeRotation = (cubeRotation + imageRotation)   / 2;    
+        cubeRotation = (cubeRotation + imageRotation) / 2;
         //Save the jpeg with name in the form of
         //[LocationName]{ImagePosition}`ImageRotation`UniqueIdentifier
-        string newName = "["+inputField.text+"]"+"{" + imagePosition.ToString() + "}" + "`" + imageRotation.ToString() + "`" + Guid.NewGuid().ToString();
+        string newName = "[" + inputField.text + "]" + "{" + imagePosition.ToString() + "}" + "`" + imageRotation.ToString() + "`" + Guid.NewGuid().ToString();
         newName = newName.Replace(" ", "");
-        //string newName = Guid.NewGuid().ToString();
-        //XRReferenceImage newImage = new XRReferenceImage(imageGuid, textureGuid, new Vector2(0.1f, 0.1f), newName, texture2D);
+
         StartCoroutine(SaveImage(texture, newName));
-        
+
 
     }
 
 
     public IEnumerator SaveImage(Texture2D texture2D, string newName)
-    {   
+    {
         string path = Application.persistentDataPath + "/temp";
         yield return null;
         byte[] bytes = texture2D.EncodeToJPG();
@@ -89,7 +88,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         file.Close();
     }
 
-     void Update()
+    void Update()
     {
         if (imageCounter == 1)
         {
@@ -110,11 +109,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         if (imageCounter == 5)
         {
             hintsLog.text = "Enough pictures taken!";
-            //placeCubeButton.gameObject.SetActive(true);
-            spawnedObject = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x,0, 0)));
+
+            spawnedObject = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x, 0, 0)));
             StartCoroutine(SaveJson());
             goToMenuButton.gameObject.SetActive(true);
-            
+
         }
     }
 
@@ -143,23 +142,15 @@ public class CaptureImageRunTimeManager : MonoBehaviour
     public IEnumerator SaveJson()
     {
         yield return null;
-        //string json = JsonUtility.ToJson(spawnedObject.transform);
+
         string json = "{" + spawnedObject.transform.position.ToString() + "}" + "`" + spawnedObject.transform.eulerAngles.ToString() + "`";
         json = json.Replace(" ", "");
-        //File.Create(path + "/cube.txt");
-        //File.WriteAllText(path + "/cube.txt", json, System.Text.Encoding.UTF8);
+
         FileStream fs = new FileStream(path + "/cube.json", FileMode.Create);
         byte[] bytes = new UTF8Encoding().GetBytes(json.ToString());
         fs.Write(bytes, 0, bytes.Length);
         fs.Close();
-        //String path = Application.persistentDataPath + "/temp";
-        //yield return null;
-        //if (!File.Exists(path + "/cubeJson.txt"))
-        //    File.Create(path + "/cubeJson.txt");
-        //FileStream file = File.Open(path + "/cubeJson.txt", FileMode.Open);
-        //StreamWriter writer = new StreamWriter(file);
-        //writer.Write(json);
-        //file.Close();
+
     }
 
 }

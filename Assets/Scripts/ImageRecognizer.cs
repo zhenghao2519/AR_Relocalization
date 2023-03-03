@@ -16,8 +16,9 @@ public class ImageRecognizer : MonoBehaviour
 {
     //[SerializeField]
     //private Button recognizeImageButton;
-    public GameObject ball000;
-    public GameObject cube100;
+    public GameObject ball_cood_origin;
+;
+    public GameObject gameobjectToPlace;
     [SerializeField]
     private Text scanResult;
 
@@ -51,12 +52,12 @@ public class ImageRecognizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(ball000, Vector3.zero, Quaternion.Euler(Vector3.zero));
+        Instantiate(ball_cood_origin, Vector3.zero, Quaternion.Euler(Vector3.zero));
 
         trackImageManager = gameObject.AddComponent<ARTrackedImageManager>();
 
         trackImageManager.referenceLibrary = runtimeImageLibrary;
-        //trackImageManager.referenceLibrary = trackImageManager.CreateRuntimeLibrary(runtimeImageLibrary);
+
         trackImageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
         trackImageManager.trackedImagePrefab = presentObject;
 
@@ -79,11 +80,11 @@ public class ImageRecognizer : MonoBehaviour
                 StartCoroutine(LoadImage(file));
             }
         }
-        
+
 
         scanResult.text = "No picture is detected" + cubePosition + cubeRotation;
 
-        //recognizeImageButton.onClick.AddListener(() => StartCoroutine(LoadImage(imgPath)));
+
 
     }
 
@@ -132,20 +133,10 @@ public class ImageRecognizer : MonoBehaviour
     {
         yield return null;
 
-        //imageGuid refers to XRReferenceImage, textureGuid refers to texture in the AssetsDatabase 
-        //var imageGuid = new SerializableGuid(0, 0);
-        //var textureGuid = new SerializableGuid(0, 0);
-
 
         try
         {
             MutableRuntimeReferenceImageLibrary mutableRuntimeReferenceImageLibrary = trackImageManager.referenceLibrary as MutableRuntimeReferenceImageLibrary;
-            //String path = Application.persistentDataPath + "/temp";
-            //var files = Directory.GetFiles(path);
-            //foreach (Texture2D pics in files) 
-            //{
-            //    mutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(texture2D, Guid.NewGuid().ToString(), 0.1f);
-            //}
 
             var jobHandle = mutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(texture2D, newName, 0.1f);
 
@@ -185,7 +176,6 @@ public class ImageRecognizer : MonoBehaviour
     }
 
     private IEnumerator UpdateOffset(ARTrackedImage trackedImage, string detectedLocation, string position, string rotation)
-    //private IEnumerator UpdateOffset(string detectedLocation, string position, string rotation)
     {
         yield return new WaitForSeconds(1);
         //if tracked image is the first one being detected in this location
@@ -193,10 +183,10 @@ public class ImageRecognizer : MonoBehaviour
         {
             locationName = detectedLocation;
             imageCounter = 1;
+
             deltaPostion = trackedImage.transform.position - ParseVector3(position);
             deltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
-            //deltaPostion = xrCamera.transform.position - ParseVector3(position);
-            //deltaRotation = xrCamera.transform.eulerAngles - ParseVector3(rotation);
+
             scanResult.text = ParseVector3(position).ToString();
             newCubePosition = cubePositionVector + deltaPostion;
             newCubeRotation = cubeRotationVector + deltaRotation;
@@ -208,8 +198,6 @@ public class ImageRecognizer : MonoBehaviour
             imageCounter++;
             Vector3 currentDeltaPosition = trackedImage.transform.position - ParseVector3(position);
             Vector3 currentDeltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
-            //Vector3 currentDeltaPosition = xrCamera.transform.position - ParseVector3(position);
-            //Vector3 currentDeltaRotation = xrCamera.transform.eulerAngles - ParseVector3(rotation);
 
             //if more image detected, recalculate the offset (deltaPosition, deltaRotation) by choosing the average value
             deltaPostion = (deltaPostion * (imageCounter - 1) + currentDeltaPosition) / imageCounter;
@@ -223,31 +211,26 @@ public class ImageRecognizer : MonoBehaviour
         {
             if (showedObject == null)
             {
-                //showedObject = Instantiate(gameObjectToPlace, ParseVector3(cubePosition) + deltaPostion, Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation));
-                //showedObject = Instantiate(cube100, Vector3.right + deltaPostion, Quaternion.Euler(Vector3.zero + deltaRotation));
 
-                showedObject = Instantiate(cube100,newCubePosition,Quaternion.Euler(new Vector3(newCubeRotation.x, 0,0)));
-                
+                showedObject = Instantiate(gameobjectToPlace, newCubePosition, Quaternion.Euler(new Vector3(newCubeRotation.x, 0, 0)));
+
             }
             else
             {
-                //showedObject.transform.position = ParseVector3(cubePosition) + deltaPostion;
-                //showedObject.transform.rotation = Quaternion.Euler(ParseVector3(cubeRotation) + deltaRotation);
                 showedObject.transform.position = newCubePosition;
                 showedObject.transform.rotation = Quaternion.Euler(new Vector3(newCubeRotation.x, 0, 0));
             }
-            //scanResult.text = imageCounter + " pictures of " + locationName + "detected. Current offset is" + deltaPostion + deltaRotation;
 
-            
-            scanResult.text += imageCounter + " pictures of " + locationName + "detected. Current offset is" + newCubePosition + newCubeRotation;
+
+            scanResult.text += imageCounter + " pictures of " + locationName + "detected.";
         }
     }
     void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-         
+
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
-            
+
             string detectedLocation = Regex.Match(trackedImage.referenceImage.name, @"\[\S*\]").Value;
             string position = Regex.Match(trackedImage.referenceImage.name, @"\{\S*\}").Value;
             //from {(xx,yy,zz)} to xx,yy,zz
@@ -256,17 +239,7 @@ public class ImageRecognizer : MonoBehaviour
             //from '(xx,yy,zz)' to xx,yy,zz
             rotation = rotation.Substring(2, rotation.Length - 4);
             StartCoroutine(UpdateOffset(trackedImage, detectedLocation, position, rotation));
-            
-            
-
-            // Display the name of the tracked image in the canvas
-            //currentImageText.text = trackedImage.referenceImage.name;
-            //trackedImage.transform.Rotate(Vector3.up, 180);
         }
-
-        //foreach (ARTrackedImage trackedImage in eventArgs.updated)
-        //{
-        //}
     }
 }
 
