@@ -42,10 +42,10 @@ Every team will present in a **15 minute presentation** what they did in the lab
       2. Live capture and detection: 加入图片capture功能并实时加入图片库，并可以检测出来
       3. Image save: 第二次迭代中capture的图片会被保存，并在下次打开app的时候识别
       4. Mode distinction：将上代的功能分割到 Capture和Detection两个mode，并实现mode切换
-      5. CaptureMode: 加入地点输入，图片以特别的名称保存 **[LocationName]UniqueIdentifier**
-      6. DetectionMode:通过正则语言识别地点名，在连续检测到三个相同Location的图片的时候返回Location。识别之后在画面上显示绿色Detected
-      7. RefineUI: 添加美化UI
-	  8. Save/Load Image Location/Position: 图片以特别的名称保存位置 **[LocationName]{Position}\`Rotation\`UniqueIdentifier**
+	  5. RefineUI: 添加美化UI
+      6. CaptureMode: 加入地点输入，图片以特别的名称保存 **[LocationName]UniqueIdentifier**
+      7. DetectionMode:通过正则语言识别地点名，在连续检测到三个相同Location的图片的时候返回Location。识别之后在画面上显示绿色Detected
+	  8. Save/Load Image Location/Position: 图片以特别的名称保存位置 **[LocationName]{Position}\`Rotation\`UniqueIdentifier** 
 	  9. **(!Disposed)** Add AR plain detection, tap the screen to place a cube, store/load the location of the cube in the form of json
 	  10. Offset calculation: calculate the offset, place the cube again in currenet scene with regards to the offset.
 3. The most interesting details about your implementation efforts and learnings about the system you worked with:  Extract the most interesting details about your work and explain to the other students why you think it's worth mentioning Your slides should not all be walls of code, visual content such as conceptual diagrams and recordings of demos often work better to explain concepts & algorithms
