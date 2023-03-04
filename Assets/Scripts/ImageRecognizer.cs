@@ -15,9 +15,9 @@ using Unity.VisualScripting;
 public class ImageRecognizer : MonoBehaviour
 {
     //[SerializeField]
-    //private Button recognizeImageButton;
+
     public GameObject ball_cood_origin;
-;
+
     public GameObject gameobjectToPlace;
     [SerializeField]
     private Text scanResult;
@@ -65,7 +65,7 @@ public class ImageRecognizer : MonoBehaviour
         trackImageManager.enabled = true;
 
         //this read the the local json file of the placed cube
-        StartCoroutine(LoadCube());
+        //StartCoroutine(LoadCube());
 
         trackImageManager.trackedImagesChanged += OnChanged;
 
@@ -80,9 +80,10 @@ public class ImageRecognizer : MonoBehaviour
                 StartCoroutine(LoadImage(file));
             }
         }
+        cubePositionVector = Vector3.right;
+        cubeRotationVector = Vector3.zero;
 
-
-        scanResult.text = "No picture is detected" + cubePosition + cubeRotation;
+        scanResult.text = "No picture is detected";
 
 
 
@@ -94,21 +95,21 @@ public class ImageRecognizer : MonoBehaviour
         trackImageManager.trackedImagesChanged -= OnChanged;
     }
     //load the position and rotation(string) of the cube placed in image capture mode, and parse them into vector
-    public IEnumerator LoadCube()
-    {
-        yield return null;
-        scanResult.text = "start read";
-        string cubeLocation = LoadJsontoString();
-        scanResult.text = "getJson" + "|" + cubeLocation;
-        cubePosition = Regex.Match(cubeLocation, @"\{\S*\}").Value;
-        cubePosition = cubePosition.Substring(2, cubePosition.Length - 4);
-        cubeRotation = Regex.Match(cubeLocation, @"\`\S*\`").Value;
-        cubeRotation = cubeRotation.Substring(2, cubeRotation.Length - 4);
-        scanResult.text = cubeLocation + "||" + cubePosition + "|" + cubeRotation + "Cube loaded";
-        cubePositionVector = ParseVector3(cubePosition);
-        cubeRotationVector = ParseVector3(cubeRotation);
+    //public IEnumerator LoadCube()
+    //{
+    //    yield return null;
+    //    scanResult.text = "start read";
+    //    string cubeLocation = LoadJsontoString();
+    //    scanResult.text = "getJson" + "|" + cubeLocation;
+    //    cubePosition = Regex.Match(cubeLocation, @"\{\S*\}").Value;
+    //    cubePosition = cubePosition.Substring(2, cubePosition.Length - 4);
+    //    cubeRotation = Regex.Match(cubeLocation, @"\`\S*\`").Value;
+    //    cubeRotation = cubeRotation.Substring(2, cubeRotation.Length - 4);
+    //    scanResult.text = cubeLocation + "||" + cubePosition + "|" + cubeRotation + "Cube loaded";
+    //    cubePositionVector = ParseVector3(cubePosition);
+    //    cubeRotationVector = ParseVector3(cubeRotation);
 
-    }
+    //}
     public IEnumerator LoadImage(string imgPath)
     {
         yield return null;
@@ -162,18 +163,18 @@ public class ImageRecognizer : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
-    public string LoadJsontoString()
-    {
-        string path = Application.persistentDataPath + "/temp/cube/cube.json";
-        FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-        int byteLength = (int)fs.Length;
-        byte[] bytes = new byte[byteLength];
-        fs.Read(bytes, 0, byteLength);
-        fs.Close();
-        fs.Dispose();
-        string s = new UTF8Encoding().GetString(bytes);
-        return s;
-    }
+    //public string LoadJsontoString()
+    //{
+    //    string path = Application.persistentDataPath + "/temp/cube/cube.json";
+    //    FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+    //    int byteLength = (int)fs.Length;
+    //    byte[] bytes = new byte[byteLength];
+    //    fs.Read(bytes, 0, byteLength);
+    //    fs.Close();
+    //    fs.Dispose();
+    //    string s = new UTF8Encoding().GetString(bytes);
+    //    return s;
+    //}
 
     private IEnumerator UpdateOffset(ARTrackedImage trackedImage, string detectedLocation, string position, string rotation)
     {
@@ -187,13 +188,12 @@ public class ImageRecognizer : MonoBehaviour
             deltaPostion = trackedImage.transform.position - ParseVector3(position);
             deltaRotation = trackedImage.transform.eulerAngles - ParseVector3(rotation);
 
-            scanResult.text = ParseVector3(position).ToString();
             newCubePosition = cubePositionVector + deltaPostion;
             newCubeRotation = cubeRotationVector + deltaRotation;
 
         }
-        else
         //if tracked image belongs to the same detected location of the previous detected image,update cube position and rotation
+        else
         {
             imageCounter++;
             Vector3 currentDeltaPosition = trackedImage.transform.position - ParseVector3(position);
@@ -213,7 +213,6 @@ public class ImageRecognizer : MonoBehaviour
             {
 
                 showedObject = Instantiate(gameobjectToPlace, newCubePosition, Quaternion.Euler(new Vector3(newCubeRotation.x, 0, 0)));
-
             }
             else
             {
@@ -222,7 +221,7 @@ public class ImageRecognizer : MonoBehaviour
             }
 
 
-            scanResult.text += imageCounter + " pictures of " + locationName + "detected.";
+            scanResult.text = imageCounter + " pictures of " + locationName + "detected.";
         }
     }
     void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)

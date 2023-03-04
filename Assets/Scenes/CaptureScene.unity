@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectToPlace: {fileID: 2962411716158121133, guid: 5a97cde18c095c345b63f6798de76401, type: 3}
-  ball000: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
+  ball_cood_origin: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
   hintsLog: {fileID: 782628377}
   captureImageButton: {fileID: 568892914}
   goToMenuButton: {fileID: 800426557}

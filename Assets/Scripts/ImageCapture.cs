@@ -9,12 +9,12 @@ using UnityEngine.XR.ARSubsystems;
 using System.Drawing;
 using Unity.XR.CoreUtils;
 using System.Text;
-//using Application = UnityEngine.Application;
+
 
 public class CaptureImageRunTimeManager : MonoBehaviour
 {
     public GameObject gameObjectToPlace;
-    private GameObject spawnedObject;
+    private GameObject cube100;
     private string path;
     private Vector3 cubePosition;
     private Vector3 cubeRotation;
@@ -62,8 +62,11 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         //The camera's local position in xr origin space.
         Vector3 imagePosition = xrCamera.position;
         Vector3 imageRotation = xrCamera.eulerAngles;
-        cubePosition = (cubePosition + imagePosition) / 2;
-        cubeRotation = (cubeRotation + imageRotation) / 2;
+
+        cubePosition = Vector3.right;
+        cubeRotation = Vector3.zero;
+
+
         //Save the jpeg with name in the form of
         //[LocationName]{ImagePosition}`ImageRotation`UniqueIdentifier
         string newName = "[" + inputField.text + "]" + "{" + imagePosition.ToString() + "}" + "`" + imageRotation.ToString() + "`" + Guid.NewGuid().ToString();
@@ -110,48 +113,47 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         {
             hintsLog.text = "Enough pictures taken!";
 
-            spawnedObject = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x, 0, 0)));
-            StartCoroutine(SaveJson());
+            cube100 = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x, 0, 0)));
+            //StartCoroutine(SaveJson());
             goToMenuButton.gameObject.SetActive(true);
-
         }
     }
 
 
-    public static Vector3 ParseVector3(string str)
-    {
-        string[] strs = str.Split(',');
-        float x = float.Parse(strs[0]);
-        float y = float.Parse(strs[1]);
-        float z = float.Parse(strs[2]);
-        return new Vector3(x, y, z);
-    }
+    //public static Vector3 ParseVector3(string str)
+    //{
+    //    string[] strs = str.Split(',');
+    //    float x = float.Parse(strs[0]);
+    //    float y = float.Parse(strs[1]);
+    //    float z = float.Parse(strs[2]);
+    //    return new Vector3(x, y, z);
+    //}
 
-    public string LoadJsontoString()
-    {
-        string path = Application.persistentDataPath + "/temp/cube/cube.json";
-        FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-        int byteLength = (int)fs.Length;
-        byte[] bytes = new byte[byteLength];
-        fs.Read(bytes, 0, byteLength);
-        fs.Close();
-        fs.Dispose();
-        string s = new UTF8Encoding().GetString(bytes);
-        return s;
-    }
-    public IEnumerator SaveJson()
-    {
-        yield return null;
+    //public string LoadJsontoString()
+    //{
+    //    string path = Application.persistentDataPath + "/temp/cube/cube.json";
+    //    FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+    //    int byteLength = (int)fs.Length;
+    //    byte[] bytes = new byte[byteLength];
+    //    fs.Read(bytes, 0, byteLength);
+    //    fs.Close();
+    //    fs.Dispose();
+    //    string s = new UTF8Encoding().GetString(bytes);
+    //    return s;
+    //}
+    //public IEnumerator SaveJson()
+    //{
+    //    yield return null;
 
-        string json = "{" + spawnedObject.transform.position.ToString() + "}" + "`" + spawnedObject.transform.eulerAngles.ToString() + "`";
-        json = json.Replace(" ", "");
+    //    string json = "{" + spawnedObject.transform.position.ToString() + "}" + "`" + spawnedObject.transform.eulerAngles.ToString() + "`";
+    //    json = json.Replace(" ", "");
 
-        FileStream fs = new FileStream(path + "/cube.json", FileMode.Create);
-        byte[] bytes = new UTF8Encoding().GetBytes(json.ToString());
-        fs.Write(bytes, 0, bytes.Length);
-        fs.Close();
+    //    FileStream fs = new FileStream(path + "/cube.json", FileMode.Create);
+    //    byte[] bytes = new UTF8Encoding().GetBytes(json.ToString());
+    //    fs.Write(bytes, 0, bytes.Length);
+    //    fs.Close();
 
-    }
+    //}
 
 }
 
