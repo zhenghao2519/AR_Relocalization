@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using static System.Net.WebRequestMethods;
 //using System.Text.RegularExpressions;
 //using Application = UnityEngine.Application;
 
@@ -71,15 +72,10 @@ public class ImageRecognizer : MonoBehaviour
 
         //recognizing images take possibly more than few frames, using startcorotine to handle this job
         String imgPath = Application.persistentDataPath + "/temp/";
-        if (Directory.Exists(imgPath))
-        {
-            var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
-            foreach (string file in imgFiles)
-            {
-                //Debug.Log(file);
-                StartCoroutine(LoadImage(file));
-            }
-        }
+        
+        StartCoroutine(LoadImage(imgPath));
+
+        // in our demo, we demonstrate a cube placed in capture mode with position (1,0,0) and rotation (0,0,0)
         cubePositionVector = Vector3.right;
         cubeRotationVector = Vector3.zero;
 
@@ -110,21 +106,31 @@ public class ImageRecognizer : MonoBehaviour
     //    cubeRotationVector = ParseVector3(cubeRotation);
 
     //}
+
+
+    // After this coroutine is called in start:
+    // In the first frame it find a jpeg file in imgPath, start new coroutine AddImageJob to load this file, yield and wait for the next frame
+    // In the following frame, we have only two coroutines to execute: the original LoadImage coroutine running a foreach loop and an AddImageJob from the LoadImage in the last frame
     public IEnumerator LoadImage(string imgPath)
     {
         yield return null;
-        FileStream fs = new FileStream(imgPath, FileMode.Open, FileAccess.Read);
-        int byteLength = (int)fs.Length;
-        byte[] imgBytes = new byte[byteLength];
-        fs.Read(imgBytes, 0, byteLength);
-        fs.Close();
-        fs.Dispose();
-        //convert to Texture2D
-        Texture2D t2d = new Texture2D(4, 4);
-        t2d.LoadImage(imgBytes);
-
-        StartCoroutine(AddImageJob(t2d, imgPath));
-
+        //if the directory ex
+        if (Directory.Exists(imgPath)) {
+            var imgFiles = Directory.GetFiles(imgPath, "*.jpg");
+            foreach (string file in imgFiles) {
+                FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read);
+                int byteLength = (int)fs.Length;
+                byte[] imgBytes = new byte[byteLength];
+                fs.Read(imgBytes, 0, byteLength);
+                fs.Close();
+                fs.Dispose();
+                //convert to Texture2D
+                Texture2D t2d = new Texture2D(4, 4);
+                t2d.LoadImage(imgBytes);
+                StartCoroutine(AddImageJob(t2d, file));
+                yield return null;
+            }
+        }
     }
 
 
@@ -176,9 +182,20 @@ public class ImageRecognizer : MonoBehaviour
     //    return s;
     //}
 
-    private IEnumerator UpdateOffset(ARTrackedImage trackedImage, string detectedLocation, string position, string rotation)
+    private IEnumerator UpdateOffset(ARTrackedImage trackedImage)
     {
+        // wait the tracked image manager to set right position and rotation
         yield return new WaitForSeconds(1);
+
+        //read positions and rotations from file name
+        string detectedLocation = Regex.Match(trackedImage.referenceImage.name, @"\[\S*\]").Value;
+        string position = Regex.Match(trackedImage.referenceImage.name, @"\{\S*\}").Value;
+        //from {(xx,yy,zz)} to xx,yy,zz
+        position = position.Substring(2, position.Length - 4);
+        string rotation = Regex.Match(trackedImage.referenceImage.name, @"\`\S*\`").Value;
+        //from '(xx,yy,zz)' to xx,yy,zz
+        rotation = rotation.Substring(2, rotation.Length - 4);
+
         //if tracked image is the first one being detected in this location
         if (detectedLocation != locationName)
         {
@@ -229,15 +246,7 @@ public class ImageRecognizer : MonoBehaviour
 
         foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
-
-            string detectedLocation = Regex.Match(trackedImage.referenceImage.name, @"\[\S*\]").Value;
-            string position = Regex.Match(trackedImage.referenceImage.name, @"\{\S*\}").Value;
-            //from {(xx,yy,zz)} to xx,yy,zz
-            position = position.Substring(2, position.Length - 4);
-            string rotation = Regex.Match(trackedImage.referenceImage.name, @"\`\S*\`").Value;
-            //from '(xx,yy,zz)' to xx,yy,zz
-            rotation = rotation.Substring(2, rotation.Length - 4);
-            StartCoroutine(UpdateOffset(trackedImage, detectedLocation, position, rotation));
+            StartCoroutine(UpdateOffset(trackedImage));
         }
     }
 }

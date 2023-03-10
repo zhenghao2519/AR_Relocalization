@@ -42,10 +42,10 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         hintsLog.text = "Please first enter a location name! ";
         xrCamera = GameObject.Find("XR Origin").transform.Find("Camera Offset").Find("Main Camera");
         Instantiate(ball_cood_origin, Vector3.zero, Quaternion.Euler(Vector3.zero));
-        //Instantiate(cube100, Vector3.right, Quaternion.Euler(Vector3.zero));
-        path = Application.persistentDataPath + "/temp/cube";
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
+        Instantiate(gameObjectToPlace, Vector3.right, Quaternion.Euler(Vector3.zero));
+        //path = Application.persistentDataPath + "/temp/cube";
+        //if (!Directory.Exists(path))
+        //    Directory.CreateDirectory(path);
         captureImageButton.onClick.AddListener(() => StartCoroutine(CaptureImage()));
 
     }
@@ -63,18 +63,12 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         Vector3 imagePosition = xrCamera.position;
         Vector3 imageRotation = xrCamera.eulerAngles;
 
-        cubePosition = Vector3.right;
-        cubeRotation = Vector3.zero;
-
-
         //Save the jpeg with name in the form of
         //[LocationName]{ImagePosition}`ImageRotation`UniqueIdentifier
         string newName = "[" + inputField.text + "]" + "{" + imagePosition.ToString() + "}" + "`" + imageRotation.ToString() + "`" + Guid.NewGuid().ToString();
         newName = newName.Replace(" ", "");
 
         StartCoroutine(SaveImage(texture, newName));
-
-
     }
 
 
@@ -113,7 +107,7 @@ public class CaptureImageRunTimeManager : MonoBehaviour
         {
             hintsLog.text = "Enough pictures taken!";
 
-            cube100 = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x, 0, 0)));
+            //cube100 = Instantiate(gameObjectToPlace, cubePosition, Quaternion.Euler(new Vector3(cubeRotation.x, 0, 0)));
             //StartCoroutine(SaveJson());
             goToMenuButton.gameObject.SetActive(true);
         }
