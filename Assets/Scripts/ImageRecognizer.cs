@@ -229,12 +229,12 @@ public class ImageRecognizer : MonoBehaviour
             if (showedObject == null)
             {
 
-                showedObject = Instantiate(gameobjectToPlace, newCubePosition, Quaternion.Euler(new Vector3(newCubeRotation.x, 0, 0)));
+                showedObject = Instantiate(gameobjectToPlace, newCubePosition, Quaternion.Euler(newCubeRotation));
             }
             else
             {
                 showedObject.transform.position = newCubePosition;
-                showedObject.transform.rotation = Quaternion.Euler(new Vector3(newCubeRotation.x, 0, 0));
+                showedObject.transform.rotation = Quaternion.Euler(newCubeRotation);
             }
 
 
