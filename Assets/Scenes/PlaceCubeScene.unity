@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -67,6 +67,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -1049,7 +1052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlanePrefab: {fileID: 1953078813312724268, guid: 823ee20cedfa14b4b96891623b71f016, type: 3}
-  m_DetectionMode: -1
+  m_DetectionMode: 1
 --- !u!114 &2010864111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1062,7 +1065,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e6051a08c0acad43a7f0520328a4e23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToPlace: {fileID: 7438809964396442887, guid: 584d408540f360148b582f50a02f62b6, type: 3}
+  gameObjectToPlace: {fileID: 2962411716158121133, guid: 5a97cde18c095c345b63f6798de76401, type: 3}
+  scanResult: {fileID: 1135368750}
 --- !u!114 &2010864112
 MonoBehaviour:
   m_ObjectHideFlags: 0

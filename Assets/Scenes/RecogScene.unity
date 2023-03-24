@@ -67,6 +67,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -750,13 +753,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d728312384ab924a9ce8bd79d7962c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ball000: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
-  cube100: {fileID: 9154671178031857203, guid: 8ba6bfe9120e7fe4ea1414c229f1f8fa, type: 3}
+  ball_cood_origin: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
+  gameobjectToPlace: {fileID: 2962411716158121133, guid: 5a97cde18c095c345b63f6798de76401, type: 3}
   scanResult: {fileID: 477391596}
   presentObject: {fileID: 2686322654911161818, guid: a85bb0ba94f90c341bda57a9662211da, type: 3}
   runtimeImageLibrary: {fileID: 11400000, guid: 100533d7b6fe24d4cbfb78968cb6a58e, type: 2}
   MaxNumberOfMovingImages: 5
-  gameObjectToPlace: {fileID: 7438809964396442887, guid: 584d408540f360148b582f50a02f62b6, type: 3}
 --- !u!1 &1750211629
 GameObject:
   m_ObjectHideFlags: 0

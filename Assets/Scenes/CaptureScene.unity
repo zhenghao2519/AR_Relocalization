@@ -67,6 +67,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -1251,11 +1254,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dca7db848744564db70ebed39fa6e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ball000: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
-  cube100: {fileID: 9154671178031857203, guid: 8ba6bfe9120e7fe4ea1414c229f1f8fa, type: 3}
+  gameObjectToPlace: {fileID: 2962411716158121133, guid: 5a97cde18c095c345b63f6798de76401, type: 3}
+  ball_cood_origin: {fileID: 8200540768187754430, guid: bfa78d2eaa792314d8c91534710ce74e, type: 3}
   hintsLog: {fileID: 782628377}
   captureImageButton: {fileID: 568892914}
-  placeCubeButton: {fileID: 800426557}
+  goToMenuButton: {fileID: 800426557}
   inputField: {fileID: 1751777941}
 --- !u!114 &1617371238
 MonoBehaviour:
